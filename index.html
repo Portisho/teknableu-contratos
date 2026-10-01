@@ -135,8 +135,34 @@ document.getElementById('finish').onclick=()=>{
 };
 document.getElementById('reset').addEventListener('click',()=>{
  if(!confirm('¿Borrar todos los datos y las dos firmas de este contrato?')) return;
+
+ // 1. Borrar almacenamiento local
  try{ localStorage.removeItem(storageKey); }catch(e){}
- window.location.reload();
+
+ // 2. Vaciar físicamente todos los campos visibles (evita que Safari restaure valores)
+ form.querySelectorAll('input').forEach(el=>{
+   if(el.type==='checkbox'||el.type==='radio') el.checked=false;
+   else el.value='';
+ });
+ form.querySelectorAll('select').forEach(el=>el.selectedIndex=0);
+
+ // 3. Borrar las dos firmas usando el código que ya funciona
+ sigE.clear();
+ sigC.clear();
+ accepted.empresa=false;
+ accepted.cliente=false;
+ document.getElementById('acceptEmpresa').classList.remove('accepted');
+ document.getElementById('acceptCliente').classList.remove('accepted');
+
+ // 4. Restablecer textos derivados y poner fecha de hoy
+ document.getElementById('modelotxt').textContent='______';
+ setDate();
+
+ // 5. Borrar de nuevo cualquier guardado disparado al limpiar las firmas
+ try{ localStorage.removeItem(storageKey); }catch(e){}
+
+ // 6. Volver al principio sin recargar la página
+ window.scrollTo({top:0,behavior:'smooth'});
 });
 
 function setDate(){if(!form.fecha_venta.value){const d=new Date(),p=n=>String(n).padStart(2,'0');form.fecha_venta.value=`${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`}}
