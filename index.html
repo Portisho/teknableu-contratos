@@ -136,16 +136,7 @@ document.getElementById('finish').onclick=()=>{
 document.getElementById('reset').addEventListener('click',()=>{
  if(!confirm('¿Borrar todos los datos y las dos firmas de este contrato?')) return;
  try{ localStorage.removeItem(storageKey); }catch(e){}
- form.reset();
- sigE.clear();
- sigC.clear();
- accepted.empresa=false;
- accepted.cliente=false;
- document.getElementById('acceptEmpresa').classList.remove('accepted');
- document.getElementById('acceptCliente').classList.remove('accepted');
- document.getElementById('modelotxt').textContent='______';
- setDate();
- window.scrollTo({top:0,behavior:'smooth'});
+ window.location.reload();
 });
 
 function setDate(){if(!form.fecha_venta.value){const d=new Date(),p=n=>String(n).padStart(2,'0');form.fecha_venta.value=`${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`}}
